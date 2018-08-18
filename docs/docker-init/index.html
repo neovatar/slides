@@ -1,0 +1,201 @@
+<!doctype html><html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Docker Init</title>
+    
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.min.css">
+    <link rel="stylesheet" href="/slides/reveal-hugo/themes/seligerit.css" id="theme">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/reveal.js\/3.6.0/css/print/pdf.css' : 'https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/reveal.js\/3.6.0/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    </head>
+  <body>
+  <div class="reveal">
+  
+  <div class="slides">
+    
+    <section>
+
+<h2 id="init-system-im-docker-container">Init System im Docker Container</h2>
+
+
+<figure>
+    
+        <img src="/slides/images/zombie.png" width="25%" />
+    
+    
+</figure>
+
+
+<p>oder &ldquo;how to reap zombies&rdquo;</p>
+
+</section><section>
+
+<section data-shortcode-section>
+<h3 id="prozesse-in-linux">Prozesse in Linux</h3>
+
+<p><img src="/slides/images/linux_procs_1.png" alt="Prozesse in Linux" /></p>
+
+</section><section>
+
+<h3 id="prozess-terminiert">Prozess terminiert</h3>
+
+<p><img src="/slides/images/linux_procs_2.png" alt="Prozess terminiert" /></p>
+
+</section><section>
+
+<h3 id="warten-auf-kindprozess-reaping">Warten auf Kindprozess (&ldquo;Reaping&rdquo;)</h3>
+
+<p><img src="/slides/images/linux_procs_3.png" alt="Warten auf Kindprozess" /></p>
+
+</section><section>
+
+<h3 id="prozesse-adoptieren">Prozesse adoptieren</h3>
+
+<p><img src="/slides/images/linux_procs_4.png" alt="Init-Prozess adoptiert Prozess" /></p>
+
+</section>
+
+</section><section>
+
+<section data-shortcode-section>
+<h3 id="docker">Docker</h3>
+
+<ul>
+<li>Entrypoint Prozess im Container hat PID 1</li>
+<li>Prozess nimmt &ldquo;PID 1 Pflichten&rdquo; nicht wahr</li>
+</ul>
+
+<p><br/>
+<strong>⇾ Folge:</strong> Zombie Prozesse können entstehen</p>
+
+</section><section>
+
+<h3 id="zombie-prozess">Zombie Prozess</h3>
+
+<ul>
+<li>Prozess ist beendet</li>
+<li>Elternprozess existiert nicht mehr oder führt kein <em>wait()</em> aus</li>
+<li>Braucht kaum Ressourcen, aber belegt PID</li>
+<li><em>/proc/sys/kernel/pid_max</em> normalerweise 32768</li>
+</ul>
+
+</section><section>
+
+<h3 id="demo-examples-zombie">Demo: examples/zombie</h3>
+
+<pre><code>docker run -ti zombie
+docker run -ti --entrypoint dumb-init zombie python3 /root/fork.py
+docker run -ti --init zombie python3 /root/fork.py
+</code></pre>
+
+</section>
+
+</section><section>
+
+<p><section data-shortcode-section>
+<h3 id="init-prozess-für-container">Init-Prozess für Container</h3>
+
+<ul>
+<li><a href="https://github.com/krallin/tini">tini</a></li>
+<li><a href="https://github.com/Yelp/dumb-init">dumb-init</a></li>
+<li><a href="https://docs.docker.com/engine/reference/run/#specify-an-init-process">docker &ndash;init &hellip;</a></li>
+<li><a href="https://github.com/just-containers/s6-overlay">s6-overlay</a></li>
+</ul>
+
+</section><section>
+
+<h3 id="s6-overlay">s6-overlay</h3>
+
+<ul>
+<li>Basiert auf <a href="http://skarnet.org/software/s6/overview.html">s6</a></li>
+<li>Stage 1: Prepare</li>
+<li>Stage 2: Execute/Start
+
+<ul>
+<li>/etc/fix-attrs.d</li>
+<li>/etc/cont-init.d</li>
+<li>Copy &amp; supervise /etc/services.d</li>
+</ul></li>
+<li>Stage 3: Shutdown stage (SIGTERM, SIGKILL)</li>
+</ul>
+
+</section></p>
+
+</section><section>
+
+<h3 id="tl-dr">tl;dr</h3>
+
+<p>Bei langlaufenden Containern, in denen Subprozesse gestartet werden, ist ein dedizierter Init Prozess ein gutes
+Pattern.</p>
+
+</section><section>
+
+<h2 id="quellen">Quellen</h2>
+
+<p><small>
+<a href="https://blog.phusion.nl/2015/01/20/docker-and-the-pid-1-zombie-reaping-problem/">https://blog.phusion.nl/2015/01/20/docker-and-the-pid-1-zombie-reaping-problem/</a>
+</small></p>
+</section>
+  </div>
+</div>
+<script type="application/json" id="reveal-hugo-site-params">{"custom_theme":"/reveal-hugo/themes/seligerit.css"}</script>
+    <script type="application/json" id="reveal-hugo-page-params">null</script>
+    <script type="text/javascript">
+      window.revealHugoDependencies = {
+        dependencies: [
+          { src: 'https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/reveal.js\/3.6.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/reveal.js\/3.6.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/reveal.js\/3.6.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/reveal.js\/3.6.0/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/reveal.js\/3.6.0/plugin/zoom-js/zoom.js', async: true },
+          
+          { src: '\/slides\/reveal-hugo\/plugin\/notes\/notes.js', async: true }
+      ]};
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/head.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.js"></script>
+    <script type="text/javascript">
+      
+      
+      function camelize(map) {
+        if (map) {
+          Object.keys(map).forEach(function(k) {
+            newK = k.replace(/(\_\w)/g, function(m) { return m[1].toUpperCase() });
+            if (newK != k) {
+              map[newK] = map[k];
+              delete map[k];
+            }
+          });
+        }
+        return map;
+      }
+      
+      var revealHugoDefaults = { center: true, controls: true, history: true, progress: true, transition: "slide" };
+      var revealHugoSiteParams = JSON.parse(document.getElementById('reveal-hugo-site-params').innerHTML);
+      var revealHugoPageParams = JSON.parse(document.getElementById('reveal-hugo-page-params').innerHTML);
+      
+      var options = Object.assign({},
+        camelize(revealHugoDefaults),
+        camelize(revealHugoSiteParams),
+        camelize(revealHugoPageParams),
+        revealHugoDependencies);
+      Reveal.initialize(options);
+    </script>
+    
+    <div class="line top"></div>
+<div class="line bottom"><div class="footer"><a href="https://seliger.it">seliger.it</a></div></div>
+<div class="line left"></div>
+<div class="line right"></div>
+  </body>
+</html>
