@@ -13,19 +13,19 @@ oder "how to reap zombies"
 {{% section %}}
 
 ### Prozesse in Linux
-![Prozesse in Linux](/slides/images/linux_procs_1.png)
+{{% figure src="/slides/images/linux_procs_1.png" width="80%" %}}
 
 ---
 ### Prozess terminiert
-![Prozess terminiert](/slides/images/linux_procs_2.png)
+{{% figure src="/slides/images/linux_procs_2.png" width="80%" %}}
 
 ---
 ### Warten auf Kindprozess ("Reaping")
-![Warten auf Kindprozess](/slides/images/linux_procs_3.png)
+{{% figure src="/slides/images/linux_procs_3.png" width="80%" %}}
 
 ---
 ### Prozesse adoptieren
-![Init-Prozess adoptiert Prozess](/slides/images/linux_procs_4.png)
+{{% figure src="/slides/images/linux_procs_4.png" width="80%" %}}
 
 {{% /section %}}
 
