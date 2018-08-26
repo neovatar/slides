@@ -16,6 +16,10 @@
   </url>
   
   <url>
+    <loc>http://neovatar.github.io/slides/docker-in-docker/</loc>
+  </url>
+  
+  <url>
     <loc>http://neovatar.github.io/slides/tags/</loc>
     <priority>0</priority>
   </url>
