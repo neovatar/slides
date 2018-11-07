@@ -114,9 +114,9 @@
 
 <h3 id="demo-examples-zombie">Demo: examples/zombie</h3>
 
-<pre><code>docker run -ti zombie
-docker run -ti --entrypoint dumb-init zombie python3 /root/fork.py
-docker run -ti --init zombie python3 /root/fork.py
+<pre><code>docker run --rm -ti zombie
+docker run --rm -ti --entrypoint dumb-init zombie python3 /root/fork.py
+docker run --rm -ti --init zombie python3 /root/fork.py
 </code></pre>
 
 </section></p>

@@ -52,9 +52,9 @@ oder "how to reap zombies"
 
 ### Demo: examples/zombie
 ```
-docker run -ti zombie
-docker run -ti --entrypoint dumb-init zombie python3 /root/fork.py
-docker run -ti --init zombie python3 /root/fork.py
+docker run --rm -ti zombie
+docker run --rm -ti --entrypoint dumb-init zombie python3 /root/fork.py
+docker run --rm -ti --init zombie python3 /root/fork.py
 ```
 
 {{% /section %}}
